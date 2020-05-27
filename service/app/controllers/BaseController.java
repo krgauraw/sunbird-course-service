@@ -59,9 +59,9 @@ public class BaseController extends Controller {
     request.setRequestId(ExecutionContext.getRequestId());
     request.setEnv(getEnvironment());
     request.getContext().put(JsonKey.REQUESTED_BY, httpRequest.flash().get(JsonKey.USER_ID));
-    ProjectLogger.log("BaseController:initRequest::: request before transforming userId = " + request + " | operation = "+operation);
+    ProjectLogger.log("BaseController:initRequest::: request before transforming userId = " + request + " | operation = "+operation, LoggerEnum.INFO);
     request = transformUserId(request);
-    ProjectLogger.log("BaseController:initRequest::: request after transforming userId = " + request + " | operation = "+operation);
+    ProjectLogger.log("BaseController:initRequest::: request after transforming userId = " + request + " | operation = "+operation, LoggerEnum.INFO);
     return request;
   }
 
@@ -201,21 +201,21 @@ public class BaseController extends Controller {
       boolean isJsonBodyRequired,
       Http.Request httpRequest) {
     try {
-      ProjectLogger.log("BaseController:handleRequest::: headers = " + headers + " | operation = "+operation);
+      ProjectLogger.log("BaseController:handleRequest::: headers = " + headers + " | operation = "+operation, LoggerEnum.INFO);
       org.sunbird.common.request.Request request = null;
       if (!isJsonBodyRequired) {
         request = createAndInitRequest(operation, httpRequest);
       } else {
         request = createAndInitRequest(operation, requestBodyJson, httpRequest);
       }
-      ProjectLogger.log("BaseController:handleRequest::: sunbird request after createAndInitRequest = " + request + " | req context = "+request.getContext());
+      ProjectLogger.log("BaseController:handleRequest::: sunbird request after createAndInitRequest = " + request + " | req context = "+request.getContext(), LoggerEnum.INFO);
       if (pathId != null) {
         request.getRequest().put(pathVariable, pathId);
         request.getContext().put(pathVariable, pathId);
       }
       if (requestValidatorFn != null) requestValidatorFn.apply(request);
       if (headers != null) request.getContext().put(JsonKey.HEADER, headers);
-      ProjectLogger.log("BaseController:handleRequest::: sunbird request context after header insertion= " + request.getContext());
+      ProjectLogger.log("BaseController:handleRequest::: sunbird request context after header insertion= " + request.getContext(), LoggerEnum.INFO);
 
       return actorResponseHandler(actorRef, request, timeout, null, httpRequest);
     } catch (Exception e) {
