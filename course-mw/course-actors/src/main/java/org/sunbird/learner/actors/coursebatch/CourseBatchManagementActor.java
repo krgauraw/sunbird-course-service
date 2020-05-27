@@ -93,6 +93,7 @@ public class CourseBatchManagementActor extends BaseActor {
 
   private void createCourseBatch(Request actorMessage) throws Throwable {
     Map<String, Object> request = actorMessage.getRequest();
+    ProjectLogger.log("CourseBatchManagementActor:createCourseBatch::: actor request at start = " + actorMessage + " | request = "+request + " | context = "+actorMessage.getContext());
     Map<String, Object> targetObject;
     List<Map<String, Object>> correlatedObject = new ArrayList<>();
     String courseBatchId = ProjectUtil.getUniqueIdFromTimestamp(actorMessage.getEnv());
@@ -110,6 +111,7 @@ public class CourseBatchManagementActor extends BaseActor {
     courseBatch.setStatus(setCourseBatchStatus((String) request.get(JsonKey.START_DATE)));
     String courseId = (String) request.get(JsonKey.COURSE_ID);
     Map<String, Object> contentDetails = getContentDetails(courseId, headers);
+    ProjectLogger.log("CourseBatchManagementActor:createCourseBatch::: contentDetails = " + contentDetails + " | courseId = "+courseId);
     courseBatch.setContentDetails(contentDetails, requestedBy);
     validateContentOrg(courseBatch.getCreatedFor());
     validateMentors(courseBatch);
